@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Tamil1011/gitassigenment.git', branch: 'main'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'mvn deploy'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+        always {
+            cleanWs() // Clean up the workspace after build
+        }
+    }
+}
